@@ -1,6 +1,6 @@
 ---
 title: "Short Lab 4"
-author: "INSERT YOUR NAME HERE"
+author: "Peiran Chen"
 date: "Due Date Here"
 output: html_document
 ---
@@ -12,13 +12,57 @@ As usual, all code below should follow the style guidelines from the lecture sli
 1. **Use the code below to read in data from a survey of 55 Duke University students about their study habits and grades. You can read more about this data at https://www.openintro.org/data/index.php?data=gpa.**
 
 ```{r}
+# import dataset
 grades_data <- read.csv("https://www.openintro.org/data/csv/gpa.csv")
 ```
 
 2. **Create a scatter plot with GPA on the y-axis and and hours studied per week on the x-axis. What do you observe?**
+```{r}
+# Plot a scatter plot with GPA as y-axis and hours studied per week on x-axis.
+plot(grades_data$studyweek, grades_data$gpa,
+     xlab = "Hours Studied per week", ylab = "GPA")
+```
+I see the points to be scattered around a lot. And there seems to not have a 
+correlation between GPA and hours studied
 
 3. **Use the `lm` function to regress `gpa` upon `studyweek`. What are the estimated coefficients? What are their interpretations?**
 
+```{r}
+# Performing regression to regress gpa upon studyweek
+lm_studyweek <- lm(grades_data$gpa ~ grades_data$studyweek)
+```
+Estimated coefficients are `r lm_studyweek$coefficients`. And it means that for one more
+hour studied per week, student's GPA is going up by 0.001127. And if a student
+does not study at all, their GPA will be 3.57
+
 4. **Use the `lm` function to regress `gpa` upon `sleepnight` and `studyweek`. What are the estimated coefficients? What are their interpretations?**
 
+```{r}
+# Performing regression to regress gpa upon studyweek and sleepnight
+lm_sleepnight_studyweek <- lm(grades_data$gpa ~ grades_data$sleepnight + grades_data$studyweek)
+lm_sleepnight_studyweek
+```
+Estimated coefficients are `r lm_sleepnight_studyweek$coefficients`. And it means that for one more
+hour studied per week, student's GPA is going up by 0.001459. And one more
+sleepnight, a student's GPA is going up by 0.22872. And if a student
+does not study at all, their GPA will be 3.410584.
+
+
 5. **We can write the model used in question 4 as \[\mathbf{Y}=\mathbf{X}\boldsymbol\beta+\boldsymbol\epsilon\]. What is $\mathbf{Y}$ here? What is $\mathbf{X}$ here. Create the matrix $X$ in your .Rmd file and print out the first six rows.**
+
+$\mathbf{Y}$ here means GPA
+
+```{r}
+# Generating X,Y for the given dataset and formula in question 4.
+formula <- grades_data$gpa ~ grades_data$sleepnight + grades_data$studyweek
+X <- model.matrix(formula, grades_data)
+frame <- model.frame(formula, grades_data)
+Y <- model.response(frame)
+#Print out the first 6 rows of X
+head(X, 6)
+
+```
+Y is 55-dimensional vector of the response, in other words, the GPA. X is a 
+a ((k+1)$\times$n) matrix of the predictors(including intercept), in other word,
+a 3$\times$ 55 matrix of sleepnight, studyweek and intercept.
+
