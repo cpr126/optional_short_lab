@@ -4,5 +4,4 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of optional_short_lab is to ...
-
+Optional Short Lab for STAT 302 at UW-Seattle.
